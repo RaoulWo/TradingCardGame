@@ -45,10 +45,10 @@ public abstract class Repository<T> : IRepository<T> where T : Entity, IAggregat
     /// <summary>
     /// Base method for populating by key.
     /// </summary>
-    /// <param name="id"></param>
+    /// <param name="guid"></param>
     /// <param name="getByIdSql"></param>
     /// <returns></returns>
-    public T GetById(int id, string getByIdSql)
+    public T GetByGuid(Guid guid, string getByIdSql)
     {
         try
         {
@@ -56,7 +56,7 @@ public abstract class Repository<T> : IRepository<T> where T : Entity, IAggregat
             {
                 cmd.CommandText = getByIdSql;
                 cmd.CommandType = CommandType.Text;
-                GetByIdCommandParameters(id, cmd);
+                GetByGuidCommandParameters(guid, cmd);
 
                 using (NpgsqlDataReader reader = cmd.ExecuteReader())
                 {
@@ -135,11 +135,11 @@ public abstract class Repository<T> : IRepository<T> where T : Entity, IAggregat
     /// <summary>
     /// Base Method for deleting data.
     /// </summary>
-    /// <param name="id"></param>
+    /// <param name="guid"></param>
     /// <param name="deleteSql"></param>
     /// <param name="sqlTransaction"></param>
     /// <returns></returns>
-    public int DeleteById(int id, string deleteSql, NpgsqlTransaction sqlTransaction)
+    public int DeleteByGuid(Guid guid, string deleteSql, NpgsqlTransaction sqlTransaction)
     {
         int rowsAffected = 0;
 
@@ -151,7 +151,7 @@ public abstract class Repository<T> : IRepository<T> where T : Entity, IAggregat
                 cmd.CommandType = CommandType.Text;
                 cmd.Transaction = sqlTransaction;
 
-                DeleteByIdCommandParameters(id, cmd);
+                DeleteByGuidCommandParameters(guid, cmd);
                 rowsAffected = cmd.ExecuteNonQuery();
             }
         }
@@ -165,8 +165,8 @@ public abstract class Repository<T> : IRepository<T> where T : Entity, IAggregat
 
     protected abstract List<T> Maps(NpgsqlDataReader reader);
     protected abstract T Map(NpgsqlDataReader reader);
-    protected abstract void GetByIdCommandParameters(int id, NpgsqlCommand cmd);
+    protected abstract void GetByGuidCommandParameters(Guid guid, NpgsqlCommand cmd);
     protected abstract void InsertCommandParameters(T entity, NpgsqlCommand cmd);
     protected abstract void UpdateCommandParameters(T entity, NpgsqlCommand cmd);
-    protected abstract void DeleteByIdCommandParameters(int id, NpgsqlCommand cmd);
+    protected abstract void DeleteByGuidCommandParameters(Guid guid, NpgsqlCommand cmd);
 }

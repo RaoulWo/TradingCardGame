@@ -8,19 +8,32 @@ public class HttpServer
 
     private HttpListener _listener;
 
+    /// <summary>
+    /// Starts the HTTP Server.
+    /// </summary>
     public void Start()
     {
         _listener = new HttpListener();
         _listener.Prefixes.Add("http://localhost:" + Port.ToString() + "/");
         _listener.Start();
+
+        // Start receiving an incoming request
         Receive();
     }
 
+    /// <summary>
+    /// Receives an incoming request asynchronously.
+    /// </summary>
     public void Receive()
     {
+        // Asynchronously retrieve an incoming request
         _listener.BeginGetContext(new AsyncCallback(ListenerCallback), _listener);
     }
 
+    /// <summary>
+    /// The callback function for when an incoming request is received.
+    /// </summary>
+    /// <param name="result"></param>
     private void ListenerCallback(IAsyncResult result)
     {
         if (_listener.IsListening)
@@ -40,6 +53,7 @@ public class HttpServer
 
             // TODO Send response
 
+            // Start receiving an incoming request
             Receive(); 
         }
     }
