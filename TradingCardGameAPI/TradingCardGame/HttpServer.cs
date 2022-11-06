@@ -1,4 +1,6 @@
 ﻿using System.Net;
+using BusinessLogic.Controllers;
+using BusinessObjects;
 
 namespace BusinessLogic;
 
@@ -7,12 +9,18 @@ public class HttpServer
     public int Port = 10001;
 
     private HttpListener _listener;
+    private Dictionary<RequestMap, Action<HttpListenerContext>> _dictionary 
+        = new Dictionary<RequestMap, Action<HttpListenerContext>>();
 
     /// <summary>
     /// Starts the HTTP Server.
     /// </summary>
     public void Start()
     {
+        // Add the url mappings
+        _dictionary.Add(new RequestMap("GET", "players"), PlayerController.Instance.Get);
+        _dictionary.Add(new RequestMap("POST", "players"), PlayerController.Instance.Post);
+
         _listener = new HttpListener();
         _listener.Prefixes.Add("http://localhost:" + Port.ToString() + "/");
         _listener.Start();
@@ -38,20 +46,16 @@ public class HttpServer
     {
         if (_listener.IsListening)
         {
-            var context = _listener.EndGetContext(result);
-            var request = context.Request;
+            // Store the context and request
+            var ctx = _listener.EndGetContext(result);
+            var req = ctx.Request;
 
-            Console.WriteLine($"{request.HttpMethod} {request.Url}");
+            // Get the http method and the http target
+            string httpMethod = req.HttpMethod.ToUpper();
+            string httpTarget = req.Url.Segments[1].Replace("/", "");
 
-            var response = context.Response;
-            response.StatusCode = (int)HttpStatusCode.OK;
-            response.ContentType = "text/plain";
-            response.OutputStream.Write(new byte[] {}, 0, 0);
-            response.OutputStream.Close();
-
-            // TODO Handle incoming request
-
-            // TODO Send response
+            // Handle the request
+            _dictionary[new RequestMap(httpMethod, httpTarget)](ctx);
 
             // Start receiving an incoming request
             Receive(); 

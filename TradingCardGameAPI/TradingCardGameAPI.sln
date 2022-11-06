@@ -3,11 +3,15 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.1.32414.318
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BusinessLogic", "TradingCardGame\BusinessLogic.csproj", "{AF7196BB-E3AD-4696-9587-653F989BB30F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BusinessLogic", "TradingCardGame\BusinessLogic.csproj", "{AF7196BB-E3AD-4696-9587-653F989BB30F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataAccess", "DataAccess\DataAccess.csproj", "{636AAE25-45FF-4E93-965A-142AE93C3C10}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DataAccess", "DataAccess\DataAccess.csproj", "{636AAE25-45FF-4E93-965A-142AE93C3C10}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BusinessObjects", "BusinessObjects\BusinessObjects.csproj", "{6ACC3405-1BF4-4D9F-A312-FD10043C7C06}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BusinessObjects", "BusinessObjects\BusinessObjects.csproj", "{6ACC3405-1BF4-4D9F-A312-FD10043C7C06}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BusinessLogic.Tests", "BusinessLogic.Tests\BusinessLogic.Tests.csproj", "{5DD1CA84-0897-44A8-AD2F-6FA0CDA64E98}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataAccess.Tests", "DataAccess.Tests\DataAccess.Tests.csproj", "{20ACF906-62F9-4A69-A26F-44CA3D5C9E88}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -27,6 +31,14 @@ Global
 		{6ACC3405-1BF4-4D9F-A312-FD10043C7C06}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6ACC3405-1BF4-4D9F-A312-FD10043C7C06}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6ACC3405-1BF4-4D9F-A312-FD10043C7C06}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5DD1CA84-0897-44A8-AD2F-6FA0CDA64E98}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5DD1CA84-0897-44A8-AD2F-6FA0CDA64E98}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5DD1CA84-0897-44A8-AD2F-6FA0CDA64E98}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5DD1CA84-0897-44A8-AD2F-6FA0CDA64E98}.Release|Any CPU.Build.0 = Release|Any CPU
+		{20ACF906-62F9-4A69-A26F-44CA3D5C9E88}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{20ACF906-62F9-4A69-A26F-44CA3D5C9E88}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{20ACF906-62F9-4A69-A26F-44CA3D5C9E88}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{20ACF906-62F9-4A69-A26F-44CA3D5C9E88}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

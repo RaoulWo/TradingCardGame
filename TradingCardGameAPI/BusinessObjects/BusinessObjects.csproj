@@ -9,6 +9,7 @@
   <ItemGroup>
     <Folder Include="Base\" />
     <Folder Include="Interfaces\Facades\" />
+    <Folder Include="Interfaces\Controllers\" />
     <Folder Include="Interfaces\Repositories\" />
   </ItemGroup>
 
