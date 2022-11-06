@@ -16,7 +16,6 @@
 
   <ItemGroup>
     <Folder Include="Facades\" />
-    <Folder Include="Repositories\" />
   </ItemGroup>
 
 </Project>

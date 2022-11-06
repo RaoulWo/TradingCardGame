@@ -9,10 +9,7 @@ public class UnitOfWork : IUnitOfWork, IDisposable
     {
         get
         {
-            if (_instance == null)
-            {
-                _instance = new UnitOfWork(new DatabaseContextFactory());
-            }
+            _instance ??= new UnitOfWork(new DatabaseContextFactory());
 
             return _instance;
         }
