@@ -61,14 +61,15 @@ public class LoginController : ILoginController
         // Construct response
         var res = ctx.Response;
         res.StatusCode = (int)HttpStatusCode.OK;
-        res.ContentType = "text/plain";
+        res.ContentType = "application/json";
 
         // Construct session cookie
         var cookie = new Cookie("session-id", Guid.NewGuid().ToString());
         res.AppendCookie(cookie);
 
         // Construct response message
-        string responseString = "Login successful!";
+        player.Password = null;
+        var responseString = Newtonsoft.Json.JsonConvert.SerializeObject(player);
         byte[] buffer = System.Text.Encoding.UTF8.GetBytes(responseString);
 
         // Set the content length
