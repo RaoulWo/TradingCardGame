@@ -14,7 +14,7 @@ public class DatabaseContext : IDatabaseContext
     /// </summary>
     public DatabaseContext()
     {
-        _connectionString = "Host=localhost;Port=5432;Username=postgres;Database=TradingCardGame";
+        _connectionString = "Host=localhost;Port=11111;Username=postgres;Password=tcg;Database=tcg";
     }
 
     /// <summary>

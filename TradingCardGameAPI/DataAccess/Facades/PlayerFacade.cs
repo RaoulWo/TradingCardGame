@@ -65,7 +65,7 @@ public class PlayerFacade : IPlayerFacade
 
     public int Insert(PlayerEntity player)
     {
-        string sqlStatement = "INSERT INTO player (Name, Password, Coins) VALUES (@Name, @Password, @Coins)";
+        string sqlStatement = "INSERT INTO player (Id, Name, Password, Coins) VALUES (@Id, @Name, @Password, @Coins)";
         int rowsAffected = 0;
 
         try

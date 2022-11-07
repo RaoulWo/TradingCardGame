@@ -1,5 +1,6 @@
 ﻿using System.Net;
 using BusinessLogic.Controllers;
+using BusinessLogic.Utils;
 using BusinessObjects;
 
 namespace BusinessLogic;
@@ -9,7 +10,7 @@ public class HttpServer
     public int Port = 10001;
 
     private HttpListener _listener;
-    private Dictionary<RequestMap, Action<HttpListenerContext>> _dictionary 
+    private readonly Dictionary<RequestMap, Action<HttpListenerContext>> _dictionary 
         = new Dictionary<RequestMap, Action<HttpListenerContext>>();
 
     /// <summary>
@@ -18,8 +19,8 @@ public class HttpServer
     public void Start()
     {
         // Add the url mappings
-        _dictionary.Add(new RequestMap("GET", "players"), PlayerController.Instance.Get);
-        _dictionary.Add(new RequestMap("POST", "players"), PlayerController.Instance.Post);
+        _dictionary.Add(new RequestMap("POST", "registration"), RegistrationController.Instance.Post);
+        _dictionary.Add(new RequestMap("POST", "login"), LoginController.Instance.Post);
 
         _listener = new HttpListener();
         _listener.Prefixes.Add("http://localhost:" + Port.ToString() + "/");
@@ -54,8 +55,16 @@ public class HttpServer
             string httpMethod = req.HttpMethod.ToUpper();
             string httpTarget = req.Url.Segments[1].Replace("/", "");
 
-            // Handle the request
-            _dictionary[new RequestMap(httpMethod, httpTarget)](ctx);
+            // Try to handle the request
+            try
+            {
+                _dictionary[new RequestMap(httpMethod, httpTarget)](ctx);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                Response.Instance.InternalServerError(ctx.Response);
+            }
 
             // Start receiving an incoming request
             Receive(); 

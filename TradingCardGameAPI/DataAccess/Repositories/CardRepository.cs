@@ -96,7 +96,7 @@ public class CardRepository : Repository<CardEntity>
     /// <param name="cmd"></param>
     protected override void GetByGuidCommandParameters(Guid guid, NpgsqlCommand cmd)
     {
-        cmd.Parameters.AddWithValue("@Id", guid);
+        cmd.Parameters.AddWithValue("@Id", guid.ToString());
     }
 
     /// <summary>
@@ -106,6 +106,7 @@ public class CardRepository : Repository<CardEntity>
     /// <param name="cmd"></param>
     protected override void InsertCommandParameters(CardEntity entity, NpgsqlCommand cmd)
     {
+        cmd.Parameters.AddWithValue("@Id", Guid.NewGuid().ToString());
         cmd.Parameters.AddWithValue("@Name", entity.Name);
         cmd.Parameters.AddWithValue("@Type", entity.Type.ToString());
         cmd.Parameters.AddWithValue("@Element", entity.Element.ToString());
@@ -121,7 +122,7 @@ public class CardRepository : Repository<CardEntity>
     /// <param name="cmd"></param>
     protected override void UpdateCommandParameters(CardEntity entity, NpgsqlCommand cmd)
     {
-        cmd.Parameters.AddWithValue("@Id", entity.Id);
+        cmd.Parameters.AddWithValue("@Id", entity.Id.ToString());
         cmd.Parameters.AddWithValue("@Name", entity.Name);
         cmd.Parameters.AddWithValue("@Type", entity.Type.ToString());
         cmd.Parameters.AddWithValue("@Element", entity.Element.ToString());
@@ -137,6 +138,6 @@ public class CardRepository : Repository<CardEntity>
     /// <param name="cmd"></param>
     protected override void DeleteByGuidCommandParameters(Guid guid, NpgsqlCommand cmd)
     {
-        cmd.Parameters.AddWithValue("@Id", guid);
+        cmd.Parameters.AddWithValue("@Id", guid.ToString());
     }
 }

@@ -66,7 +66,7 @@ public class CardFacade : ICardFacade
 
     public int Insert(CardEntity card)
     {
-        string sqlStatement = "INSERT INTO card (Name, Type, Element, Damage, Health, Cost) VALUES (@Name, @Type, @Element, @Damage, @Health, @Cost)";
+        string sqlStatement = "INSERT INTO card (Id, Name, Type, Element, Damage, Health, Cost) VALUES (@Id, @Name, @Type, @Element, @Damage, @Health, @Cost)";
         int rowsAffected = 0;
 
         try

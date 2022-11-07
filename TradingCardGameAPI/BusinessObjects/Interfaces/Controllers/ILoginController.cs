@@ -2,8 +2,7 @@
 
 namespace BusinessObjects.Interfaces.Controllers;
 
-public interface IPlayerController
+public interface ILoginController
 {
-    void Get(HttpListenerContext ctx);
     void Post(HttpListenerContext ctx);
 }

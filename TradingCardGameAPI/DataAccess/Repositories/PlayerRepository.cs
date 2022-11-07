@@ -79,7 +79,7 @@ public class PlayerRepository : Repository<PlayerEntity>
     /// <param name="cmd"></param>
     protected override void GetByGuidCommandParameters(Guid guid, NpgsqlCommand cmd)
     {
-        cmd.Parameters.AddWithValue("@Id", guid);
+        cmd.Parameters.AddWithValue("@Id", guid.ToString());
     }
 
     /// <summary>
@@ -89,9 +89,10 @@ public class PlayerRepository : Repository<PlayerEntity>
     /// <param name="cmd"></param>
     protected override void InsertCommandParameters(PlayerEntity entity, NpgsqlCommand cmd)
     {
+        cmd.Parameters.AddWithValue("@Id", Guid.NewGuid().ToString());
         cmd.Parameters.AddWithValue("@Name", entity.Name);
         cmd.Parameters.AddWithValue("@Password", entity.Password);
-        cmd.Parameters.AddWithValue("@Coins", entity.Coins);
+        cmd.Parameters.AddWithValue("@Coins", 20);
     }
 
     /// <summary>
@@ -114,6 +115,6 @@ public class PlayerRepository : Repository<PlayerEntity>
     /// <param name="cmd"></param>
     protected override void DeleteByGuidCommandParameters(Guid guid, NpgsqlCommand cmd)
     {
-        cmd.Parameters.AddWithValue("@Id", guid);
+        cmd.Parameters.AddWithValue("@Id", guid.ToString());
     }
 }
