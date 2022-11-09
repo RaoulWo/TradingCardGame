@@ -72,17 +72,24 @@ public class RegistrationController : IRegistrationController
             return;
         }
 
+        // Update players
+        players = _playerFacade.GetAll();
+
+        // Find player that has been inserted
+        player = players.FirstOrDefault(p => p.Name == insertPlayer.Name);
+        player.Password = null;
+
         // Construct response
         var res = ctx.Response;
         res.StatusCode = (int)HttpStatusCode.OK;
-        res.ContentType = "text/plain";
+        res.ContentType = "application/json";
 
         // Construct session cookie
         var cookie = new Cookie("session-id", Guid.NewGuid().ToString());
         res.AppendCookie(cookie);
 
         // Construct response message
-        string responseString = "Registration successful!";
+        string responseString = Newtonsoft.Json.JsonConvert.SerializeObject(player);
         byte[] buffer = System.Text.Encoding.UTF8.GetBytes(responseString);
 
         // Set the content length

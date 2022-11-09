@@ -89,7 +89,7 @@ public class PlayerRepository : Repository<PlayerEntity>
     /// <param name="cmd"></param>
     protected override void InsertCommandParameters(PlayerEntity entity, NpgsqlCommand cmd)
     {
-        cmd.Parameters.AddWithValue("@Id", entity.Id.ToString());
+        cmd.Parameters.AddWithValue("@Id", Guid.NewGuid().ToString());
         cmd.Parameters.AddWithValue("@Name", entity.Name);
         cmd.Parameters.AddWithValue("@Password", entity.Password);
         cmd.Parameters.AddWithValue("@Coins", 20);
