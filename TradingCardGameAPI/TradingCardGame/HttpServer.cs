@@ -21,7 +21,7 @@ public class HttpServer
         // Add the url mappings
         _dictionary.Add(new RequestMap("POST", "registration"), RegistrationController.Instance.Post);
         _dictionary.Add(new RequestMap("POST", "login"), LoginController.Instance.Post);
-
+    
         _listener = new HttpListener();
         _listener.Prefixes.Add("http://localhost:" + Port.ToString() + "/");
         _listener.Start();

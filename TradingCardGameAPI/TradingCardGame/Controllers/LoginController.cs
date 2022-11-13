@@ -29,7 +29,7 @@ public class LoginController : ILoginController
         _playerFacade = playerFacade;
     }
 
-    public void Post(HttpListenerContext ctx)
+    public void Login(HttpListenerContext ctx)
     {
         // Get request body
         var req = ctx.Request;

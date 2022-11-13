@@ -4,5 +4,5 @@ namespace BusinessObjects.Interfaces.Controllers;
 
 public interface ILoginController
 {
-    void Post(HttpListenerContext ctx);
+    void Register(HttpListenerContext ctx);
 }

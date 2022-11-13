@@ -29,7 +29,7 @@ public class RegistrationController : IRegistrationController
         _playerFacade = playerFacade;
     }
 
-    public void Post(HttpListenerContext ctx)
+    public void Register(HttpListenerContext ctx)
     {
         // Get request body
         var req = ctx.Request;
