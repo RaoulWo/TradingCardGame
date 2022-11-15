@@ -1,4 +1,5 @@
-﻿using System.Net;
+﻿using System.Collections.Concurrent;
+using System.Net;
 using BusinessLogic.Controllers;
 using BusinessLogic.Utils;
 using BusinessObjects;
@@ -10,8 +11,8 @@ public class HttpServer
     public int Port = 10001;
 
     private HttpListener _listener;
-    private readonly Dictionary<RequestMap, Action<HttpListenerContext>> _dictionary 
-        = new Dictionary<RequestMap, Action<HttpListenerContext>>();
+    private readonly ConcurrentDictionary<RequestMap, Action<HttpListenerContext>> _dictionary 
+        = new ConcurrentDictionary<RequestMap, Action<HttpListenerContext>>();
 
     /// <summary>
     /// Starts the HTTP Server.
@@ -19,8 +20,10 @@ public class HttpServer
     public void Start()
     {
         // Add the url mappings
-        _dictionary.Add(new RequestMap("POST", "registration"), RegistrationController.Instance.Post);
-        _dictionary.Add(new RequestMap("POST", "login"), LoginController.Instance.Post);
+        _dictionary.TryAdd(new RequestMap("POST", "registration"), RegistrationController.Instance.Register);
+        _dictionary.TryAdd(new RequestMap("POST", "login"), SessionController.Instance.Login);
+        _dictionary.TryAdd(new RequestMap("GET", "logout"), SessionController.Instance.Logout);
+        _dictionary.TryAdd(new RequestMap("POST", "store"), StoreController.Instance.Buy);
     
         _listener = new HttpListener();
         _listener.Prefixes.Add("http://localhost:" + Port.ToString() + "/");

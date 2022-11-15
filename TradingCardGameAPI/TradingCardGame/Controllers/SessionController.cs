@@ -1,34 +1,42 @@
 ﻿using System.Net;
 using System.Security.Cryptography;
+using BusinessLogic.Services;
 using BusinessLogic.Utils;
 using BusinessObjects.Entities;
 using BusinessObjects.Interfaces.Controllers;
 using BusinessObjects.Interfaces.Facades;
+using BusinessObjects.Interfaces.Services;
 using DataAccess.Facades;
 
 namespace BusinessLogic.Controllers;
 
-public class LoginController : ILoginController
+public class SessionController : ISessionController
 {
-    public static LoginController Instance
+    public static SessionController Instance
     {
         get
         {
-            _instance ??= new LoginController(PlayerFacade.Instance);
+            _instance ??= new SessionController(SessionService.Instance, PlayerFacade.Instance);
 
             return _instance;
         }
     }
 
-    private static LoginController _instance = null;
+    private static SessionController _instance = null;
 
+    private ISessionService _sessionService;
     private IPlayerFacade _playerFacade;
 
-    public LoginController(IPlayerFacade playerFacade)
+    public SessionController(ISessionService sessionService, IPlayerFacade playerFacade)
     {
+        _sessionService = sessionService;
         _playerFacade = playerFacade;
     }
 
+    /// <summary>
+    /// Handles the player login and establishes a session if successful.
+    /// </summary>
+    /// <param name="ctx"></param>
     public void Login(HttpListenerContext ctx)
     {
         // Get request body
@@ -63,8 +71,19 @@ public class LoginController : ILoginController
         res.StatusCode = (int)HttpStatusCode.OK;
         res.ContentType = "application/json";
 
+        // Generate new session-id
+        var sessionId = Guid.NewGuid();
+        // Construct sessionEntity
+        var sessionEntity = new SessionEntity
+        {
+            Id = sessionId,
+            PlayerId = player.Id
+        };
+        // Store the sessionEntity in the db
+        _sessionService.StoreSession(sessionEntity);
+
         // Construct session cookie
-        var cookie = new Cookie("session-id", Guid.NewGuid().ToString());
+        var cookie = new Cookie("session-id", sessionId.ToString());
         res.AppendCookie(cookie);
 
         // Construct response message
@@ -80,6 +99,57 @@ public class LoginController : ILoginController
         res.OutputStream.Close();
     }
 
+    /// <summary>
+    /// Handles the player logout and ends the session if set.
+    /// </summary>
+    /// <param name="ctx"></param>
+    public void Logout(HttpListenerContext ctx)
+    {
+        // Get request cookies
+        var req = ctx.Request;
+        var cookies = req.Cookies;
+
+        // Check if session cookies are set if not send response with status code 400
+        if (cookies.Count == 0)
+        {
+            // Send response with status code 400 Bad Request
+            Response.Instance.BadRequest(ctx.Response);
+            return;
+        }
+        
+        // Extract session id from cookie
+        var sessionId = new Guid(cookies[0].ToString().Substring(11));
+        // Construct sessionEntity
+        var sessionEntity = new SessionEntity()
+        {
+            Id = sessionId
+        };
+        // Destroy an existing session if set
+        _sessionService.DestroySession(sessionEntity);
+        
+        // Construct response
+        var res = ctx.Response;
+        res.StatusCode = (int)HttpStatusCode.OK;
+        res.ContentType = "text/plain";
+
+        // Construct response message
+        var responseString = "Logout successful!";
+        byte[] buffer = System.Text.Encoding.UTF8.GetBytes(responseString);
+
+        // Set the content length
+        res.ContentLength64 = buffer.Length;
+
+        // Send response
+        res.OutputStream.Write(buffer, 0, buffer.Length);
+        res.OutputStream.Close();
+    }
+
+    /// <summary>
+    /// Verifies the user entered password with the stored password
+    /// </summary>
+    /// <param name="userEnteredPwd"></param>
+    /// <param name="storedPwd"></param>
+    /// <returns></returns>
     private bool VerifyPassword(string userEnteredPwd, string storedPwd)
     {
         // Extract the bytes of the stored password

@@ -1,9 +1,11 @@
 ﻿using System.Net;
 using System.Security.Cryptography;
+using BusinessLogic.Services;
 using BusinessLogic.Utils;
 using BusinessObjects.Entities;
 using BusinessObjects.Interfaces.Controllers;
 using BusinessObjects.Interfaces.Facades;
+using BusinessObjects.Interfaces.Services;
 using DataAccess.Facades;
 
 namespace BusinessLogic.Controllers;
@@ -14,7 +16,7 @@ public class RegistrationController : IRegistrationController
     {
         get
         {
-            _instance ??= new RegistrationController(PlayerFacade.Instance);
+            _instance ??= new RegistrationController(SessionService.Instance, PlayerFacade.Instance);
 
             return _instance;
         }
@@ -22,13 +24,20 @@ public class RegistrationController : IRegistrationController
 
     private static RegistrationController _instance = null;
 
+    private ISessionService _sessionService;
     private IPlayerFacade _playerFacade;
 
-    public RegistrationController(IPlayerFacade playerFacade)
+    public RegistrationController(ISessionService sessionService, IPlayerFacade playerFacade)
     {
+        _sessionService = sessionService;
         _playerFacade = playerFacade;
     }
 
+    /// <summary>
+    /// Handles the player registration and sets a new session if successful.
+    /// </summary>
+    /// <param name="ctx"></param>
+    /// <exception cref="Exception"></exception>
     public void Register(HttpListenerContext ctx)
     {
         // Get request body
@@ -83,9 +92,20 @@ public class RegistrationController : IRegistrationController
         var res = ctx.Response;
         res.StatusCode = (int)HttpStatusCode.OK;
         res.ContentType = "application/json";
+        
+        // Generate new session-id
+        var sessionId = Guid.NewGuid();
+        // Construct sessionEntity
+        var sessionEntity = new SessionEntity
+        {
+            Id = sessionId,
+            PlayerId = player.Id
+        };
+        // Store the sessionEntity in the db
+        _sessionService.StoreSession(sessionEntity);
 
         // Construct session cookie
-        var cookie = new Cookie("session-id", Guid.NewGuid().ToString());
+        var cookie = new Cookie("session-id", sessionId.ToString());
         res.AppendCookie(cookie);
 
         // Construct response message
@@ -100,6 +120,11 @@ public class RegistrationController : IRegistrationController
         res.OutputStream.Close();
     }
 
+    /// <summary>
+    /// Hashes a given plaintext password.
+    /// </summary>
+    /// <param name="password"></param>
+    /// <returns></returns>
     private string Hash(string password)
     {
         // Create a salt value

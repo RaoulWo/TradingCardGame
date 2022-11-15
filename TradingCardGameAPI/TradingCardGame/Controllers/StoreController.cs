@@ -7,7 +7,7 @@ namespace BusinessLogic.Controllers;
 
 public class StoreController : IStoreController
 {
-    public StoreController Instance
+    public static StoreController Instance
     {
         get
         {
@@ -17,7 +17,7 @@ public class StoreController : IStoreController
         }
     }
     
-    private StoreController _instance = null;
+    private static StoreController _instance = null;
 
     private IPlayerFacade _playerFacade;
     private ICardFacade _cardFacade;

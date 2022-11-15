@@ -4,5 +4,5 @@ namespace BusinessObjects.Interfaces.Controllers;
 
 public interface IRegistrationController
 {
-    void SignUp(HttpListenerContext ctx);
+    void Register(HttpListenerContext ctx);
 }
