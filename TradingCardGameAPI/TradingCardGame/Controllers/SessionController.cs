@@ -4,6 +4,9 @@ using BusinessObjects.Interfaces.Facades;
 using DataAccess.Facades;
 using System.Net;
 using System.Security.Cryptography;
+using BusinessLogic.Services;
+using BusinessObjects.Interfaces.Services;
+using System;
 
 namespace BusinessLogic.Controllers;
 
@@ -13,7 +16,7 @@ public class SessionController
     {
         get
         {
-            _instance ??= new SessionController(PlayerFacade.Instance);
+            _instance ??= new SessionController(SessionService.Instance, PlayerFacade.Instance);
 
             return _instance;
         }
@@ -21,10 +24,12 @@ public class SessionController
 
     private static SessionController _instance = null;
 
+    private ISessionService _sessionService;
     private IPlayerFacade _playerFacade;
 
-    public SessionController(IPlayerFacade playerFacade)
+    public SessionController(ISessionService sessionService, IPlayerFacade playerFacade)
     {
+        _sessionService = sessionService;
         _playerFacade = playerFacade;
     }
 
@@ -83,8 +88,18 @@ public class SessionController
         res.StatusCode = (int)HttpStatusCode.OK;
         res.ContentType = "application/json";
 
+        // Construct session object
+        var session = new SessionEntity
+        {
+            Id = Guid.NewGuid(),
+            FkPlayerId = (Guid)player.Id
+        };
+
+        // Create session
+        _sessionService.CreateSession(session);
+
         // Construct session cookie
-        var cookie = new Cookie("session-id", Guid.NewGuid().ToString());
+        var cookie = new Cookie("session-id", session.Id.ToString());
         res.AppendCookie(cookie);
 
         // Construct response message
@@ -133,8 +148,18 @@ public class SessionController
         res.StatusCode = (int)HttpStatusCode.OK;
         res.ContentType = "application/json";
 
+        // Construct session object
+        var session = new SessionEntity
+        {
+            Id = Guid.NewGuid(),
+            FkPlayerId = (Guid)player.Id
+        };
+
+        // Create session
+        _sessionService.CreateSession(session);
+
         // Construct session cookie
-        var cookie = new Cookie("session-id", Guid.NewGuid().ToString());
+        var cookie = new Cookie("session-id", session.Id.ToString());
         res.AppendCookie(cookie);
 
         // Construct response message
@@ -147,6 +172,28 @@ public class SessionController
 
         // Send response
         res.OutputStream.Write(buffer, 0, buffer.Length);
+        res.OutputStream.Close();
+    }
+
+    public void Logout(HttpListenerContext ctx)
+    {
+        // Get the session cookie
+        var req = ctx.Request;
+        var sessionCookie = req.Cookies[0];
+
+        // Destroy the session
+        if (sessionCookie != null)
+        {
+            _sessionService.DestroySessionById(new Guid(sessionCookie.Value));
+        }
+
+        // Construct response
+        var res = ctx.Response;
+        res.StatusCode = (int)HttpStatusCode.OK;
+        res.ContentType = "application/json";
+
+        // Send response
+        res.OutputStream.Write(new byte[] {}, 0, 0);
         res.OutputStream.Close();
     }
 

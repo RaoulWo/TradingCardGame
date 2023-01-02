@@ -37,7 +37,7 @@ public class SessionRepository : Repository<SessionEntity>
                 SessionEntity session = new SessionEntity();
 
                 session.Id = new Guid(reader["Id"].ToString());
-                session.FkPlayerId = new Guid(reader["FkPlayerId"].ToString());
+                session.FkPlayerId = new Guid(reader["fk_player_id"].ToString());
 
                 sessions.Add(session);
             }
@@ -60,7 +60,7 @@ public class SessionRepository : Repository<SessionEntity>
             while (reader.Read())
             {
                 session.Id = new Guid(reader["Id"].ToString());
-                session.FkPlayerId = new Guid(reader["FkPlayerId"].ToString());
+                session.FkPlayerId = new Guid(reader["fk_player_id"].ToString());
             }
         }
 
