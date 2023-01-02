@@ -1,35 +1,34 @@
-﻿using System.Net;
-using System.Security.Cryptography;
-using BusinessLogic.Utils;
+﻿using BusinessLogic.Utils;
 using BusinessObjects.Entities;
-using BusinessObjects.Interfaces.Controllers;
 using BusinessObjects.Interfaces.Facades;
 using DataAccess.Facades;
+using System.Net;
+using System.Security.Cryptography;
 
 namespace BusinessLogic.Controllers;
 
-public class RegistrationController : IRegistrationController
+public class SessionController
 {
-    public static RegistrationController Instance
+    public static SessionController Instance
     {
         get
         {
-            _instance ??= new RegistrationController(PlayerFacade.Instance);
+            _instance ??= new SessionController(PlayerFacade.Instance);
 
             return _instance;
         }
     }
 
-    private static RegistrationController _instance = null;
+    private static SessionController _instance = null;
 
     private IPlayerFacade _playerFacade;
 
-    public RegistrationController(IPlayerFacade playerFacade)
+    public SessionController(IPlayerFacade playerFacade)
     {
         _playerFacade = playerFacade;
     }
 
-    public void Post(HttpListenerContext ctx)
+    public void Register(HttpListenerContext ctx)
     {
         // Get request body
         var req = ctx.Request;
@@ -100,6 +99,57 @@ public class RegistrationController : IRegistrationController
         res.OutputStream.Close();
     }
 
+    public void Login(HttpListenerContext ctx)
+    {
+        // Get request body
+        var req = ctx.Request;
+        var body = new StreamReader(req.InputStream).ReadToEnd();
+
+        // Convert request body to player entity
+        var loginPlayer = Newtonsoft.Json.JsonConvert.DeserializeObject<PlayerEntity>(body);
+
+        // Get all players
+        var players = _playerFacade.GetAll();
+
+        // Check if player with name of player exists
+        var player = players.FirstOrDefault(p => p.Name == loginPlayer?.Name);
+        if (player == null)
+        {
+            // Send response with status code 401 Unauthorized
+            Response.Instance.Unauthorized(ctx.Response);
+            return;
+        }
+
+        var passwordIsMatching = VerifyPassword(loginPlayer.Password, player.Password);
+        if (!passwordIsMatching)
+        {
+            // Send response with status code 401 Unauthorized
+            Response.Instance.Unauthorized(ctx.Response);
+            return;
+        }
+
+        // Construct response
+        var res = ctx.Response;
+        res.StatusCode = (int)HttpStatusCode.OK;
+        res.ContentType = "application/json";
+
+        // Construct session cookie
+        var cookie = new Cookie("session-id", Guid.NewGuid().ToString());
+        res.AppendCookie(cookie);
+
+        // Construct response message
+        player.Password = null;
+        var responseString = Newtonsoft.Json.JsonConvert.SerializeObject(player);
+        byte[] buffer = System.Text.Encoding.UTF8.GetBytes(responseString);
+
+        // Set the content length
+        res.ContentLength64 = buffer.Length;
+
+        // Send response
+        res.OutputStream.Write(buffer, 0, buffer.Length);
+        res.OutputStream.Close();
+    }
+
     private string Hash(string password)
     {
         // Create a salt value
@@ -117,5 +167,30 @@ public class RegistrationController : IRegistrationController
 
         // Convert the combined salt and hash into a string
         return Convert.ToBase64String(hashBytes);
+    }
+
+    private bool VerifyPassword(string userEnteredPwd, string storedPwd)
+    {
+        // Extract the bytes of the stored password
+        byte[] hashBytes = Convert.FromBase64String(storedPwd);
+
+        // Extract the salt 
+        byte[] salt = new byte[16];
+        Array.Copy(hashBytes, 0, salt, 0, 16);
+
+        // Compute the hash on the user entered password
+        var pbkdf2 = new Rfc2898DeriveBytes(userEnteredPwd, salt, 100000);
+        byte[] hash = pbkdf2.GetBytes(20);
+
+        // Compare the results
+        for (int i = 0; i < 20; i++)
+        {
+            if (hashBytes[i + 16] != hash[i])
+            {
+                return false;
+            }
+        }
+
+        return true;
     }
 }
