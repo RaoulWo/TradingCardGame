@@ -52,12 +52,26 @@ public class SessionService : ISessionService
         }
     }
 
+    public bool CheckSessionById(Guid id)
+    {
+        var session = _sessionFacade.GetByGuid(id);
+
+        return session?.Id != null;
+    }
+
     public bool CheckSessionByFkPlayerId(Guid fkPlayerId)
     {
         var sessions = _sessionFacade.GetAll();
 
         var session = sessions.FirstOrDefault(session => session.FkPlayerId == fkPlayerId);
 
-        return session != null;
+        return session?.Id != null;
+    }
+
+    public Guid GetFkPlayerIdById(Guid id)
+    {
+        var session = _sessionFacade.GetByGuid(id);
+
+        return (Guid)session.FkPlayerId;
     }
 }

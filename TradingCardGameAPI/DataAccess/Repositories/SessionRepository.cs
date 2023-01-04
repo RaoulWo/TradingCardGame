@@ -95,8 +95,8 @@ public class SessionRepository : Repository<SessionEntity>
     /// <param name="cmd"></param>
     protected override void UpdateCommandParameters(SessionEntity entity, NpgsqlCommand cmd)
     {
-        cmd.Parameters.AddWithValue("@Id", entity.Id);
-        cmd.Parameters.AddWithValue("@FkPlayerId", entity.FkPlayerId);
+        cmd.Parameters.AddWithValue("@Id", entity.Id.ToString());
+        cmd.Parameters.AddWithValue("@FkPlayerId", entity.FkPlayerId.ToString());
     }
 
     /// <summary>

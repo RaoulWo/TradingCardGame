@@ -4,21 +4,20 @@ using Npgsql;
 
 namespace DataAccess.Repositories;
 
-public class PlayerRepository : Repository<PlayerEntity>
+public class CollectionRepository : Repository<CollectionEntity>
 {
-    public static PlayerRepository Instance
+    public static CollectionRepository Instance
     {
         get
         {
-            _instance ??= new PlayerRepository(UnitOfWork.Instance);
+            _instance ??= new CollectionRepository(UnitOfWork.Instance);
 
             return _instance;
         }
     }
 
-    private static PlayerRepository _instance = null;
-
-    public PlayerRepository(IUnitOfWork unitOfWork)
+    private static CollectionRepository _instance = null;
+    public CollectionRepository(IUnitOfWork unitOfWork)
         : base(unitOfWork)
     { }
 
@@ -27,26 +26,26 @@ public class PlayerRepository : Repository<PlayerEntity>
     /// </summary>
     /// <param name="reader"></param>
     /// <returns></returns>
-    protected override List<PlayerEntity> Maps(NpgsqlDataReader reader)
+    protected override List<CollectionEntity> Maps(NpgsqlDataReader reader)
     {
-        List<PlayerEntity> players = new List<PlayerEntity>();
+        List<CollectionEntity> collections = new List<CollectionEntity>();
 
         if (reader.HasRows)
         {
             while (reader.Read())
             {
-                PlayerEntity player = new PlayerEntity();
+                CollectionEntity collection = new CollectionEntity();
 
-                player.Id = new Guid(reader["Id"].ToString());
-                player.Name = reader["Name"].ToString();
-                player.Password = reader["Password"].ToString();
-                player.Coins = Convert.ToInt32(reader["Coins"].ToString());
+                collection.Id = new Guid(reader["Id"].ToString());
+                collection.FkPlayerId = new Guid(reader["fk_player_id"].ToString());
+                collection.FkCardId = new Guid(reader["fk_card_id"].ToString());
 
-                players.Add(player);
+
+                collections.Add(collection);
             }
         }
 
-        return players;
+        return collections;
     }
 
     /// <summary>
@@ -54,22 +53,21 @@ public class PlayerRepository : Repository<PlayerEntity>
     /// </summary>
     /// <param name="reader"></param>
     /// <returns></returns>
-    protected override PlayerEntity Map(NpgsqlDataReader reader)
+    protected override CollectionEntity Map(NpgsqlDataReader reader)
     {
-        PlayerEntity player = new PlayerEntity();
+        CollectionEntity collection = new CollectionEntity();
 
         if (reader.HasRows)
         {
             while (reader.Read())
             {
-                player.Id = new Guid(reader["Id"].ToString());
-                player.Name = reader["Name"].ToString();
-                player.Password = reader["Password"].ToString();
-                player.Coins = Convert.ToInt32(reader["Coins"].ToString());
+                collection.Id = new Guid(reader["Id"].ToString());
+                collection.FkPlayerId = new Guid(reader["fk_player_id"].ToString());
+                collection.FkCardId = new Guid(reader["fk_card_id"].ToString());
             }
         }
 
-        return player;
+        return collection;
     }
 
     /// <summary>
@@ -87,12 +85,11 @@ public class PlayerRepository : Repository<PlayerEntity>
     /// </summary>
     /// <param name="entity"></param>
     /// <param name="cmd"></param>
-    protected override void InsertCommandParameters(PlayerEntity entity, NpgsqlCommand cmd)
+    protected override void InsertCommandParameters(CollectionEntity entity, NpgsqlCommand cmd)
     {
         cmd.Parameters.AddWithValue("@Id", Guid.NewGuid().ToString());
-        cmd.Parameters.AddWithValue("@Name", entity.Name);
-        cmd.Parameters.AddWithValue("@Password", entity.Password);
-        cmd.Parameters.AddWithValue("@Coins", 20);
+        cmd.Parameters.AddWithValue("@FkPlayerId", entity.FkPlayerId.ToString());
+        cmd.Parameters.AddWithValue("@FkCardId", entity.FkCardId.ToString());
     }
 
     /// <summary>
@@ -100,12 +97,11 @@ public class PlayerRepository : Repository<PlayerEntity>
     /// </summary>
     /// <param name="entity"></param>
     /// <param name="cmd"></param>
-    protected override void UpdateCommandParameters(PlayerEntity entity, NpgsqlCommand cmd)
+    protected override void UpdateCommandParameters(CollectionEntity entity, NpgsqlCommand cmd)
     {
         cmd.Parameters.AddWithValue("@Id", entity.Id.ToString());
-        cmd.Parameters.AddWithValue("@Name", entity.Name);
-        cmd.Parameters.AddWithValue("@Password", entity.Password);
-        cmd.Parameters.AddWithValue("@Coins", entity.Coins);
+        cmd.Parameters.AddWithValue("@FkPlayerId", entity.FkPlayerId.ToString());
+        cmd.Parameters.AddWithValue("@FkCardId", entity.FkCardId.ToString());
     }
 
     /// <summary>
