@@ -48,8 +48,6 @@ public class CardRepository : Repository<CardEntity>
                 card.Element = element;
 
                 card.Damage = Convert.ToInt32(reader["Damage"].ToString());
-                card.Health = Convert.ToInt32(reader["Health"].ToString());
-                card.Cost = Convert.ToInt32(reader["Cost"].ToString());
 
                 cards.Add(card);
             }
@@ -81,8 +79,6 @@ public class CardRepository : Repository<CardEntity>
                 card.Element = element;
 
                 card.Damage = Convert.ToInt32(reader["Damage"].ToString());
-                card.Health = Convert.ToInt32(reader["Health"].ToString());
-                card.Cost = Convert.ToInt32(reader["Cost"].ToString());
             }
         }
 
@@ -111,8 +107,6 @@ public class CardRepository : Repository<CardEntity>
         cmd.Parameters.AddWithValue("@Type", entity.Type.ToString());
         cmd.Parameters.AddWithValue("@Element", entity.Element.ToString());
         cmd.Parameters.AddWithValue("@Damage", entity.Damage.ToString());
-        cmd.Parameters.AddWithValue("@Health", entity.Health.ToString());
-        cmd.Parameters.AddWithValue("@Cost", entity.Cost.ToString());
     }
 
     /// <summary>
@@ -127,8 +121,6 @@ public class CardRepository : Repository<CardEntity>
         cmd.Parameters.AddWithValue("@Type", entity.Type.ToString());
         cmd.Parameters.AddWithValue("@Element", entity.Element.ToString());
         cmd.Parameters.AddWithValue("@Damage", entity.Damage.ToString());
-        cmd.Parameters.AddWithValue("@Health", entity.Health.ToString());
-        cmd.Parameters.AddWithValue("@Cost", entity.Cost.ToString());
     }
 
     /// <summary>

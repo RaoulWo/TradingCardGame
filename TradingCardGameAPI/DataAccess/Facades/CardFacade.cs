@@ -66,7 +66,7 @@ public class CardFacade : ICardFacade
 
     public int Insert(CardEntity card)
     {
-        string sqlStatement = "INSERT INTO card (Id, Name, Type, Element, Damage, Health, Cost) VALUES (@Id, @Name, @Type, @Element, @Damage, @Health, @Cost)";
+        string sqlStatement = "INSERT INTO card (Id, Name, Type, Element, Damage) VALUES (@Id, @Name, @Type, @Element, @Damage)";
         int rowsAffected = 0;
 
         try
@@ -85,7 +85,7 @@ public class CardFacade : ICardFacade
 
     public int Update(CardEntity card)
     {
-        string sqlStatement = "UPDATE card SET Name = @Name, Type = @Type, Element = @Element, Damage = @Damage, Health = @Health, Cost = @Cost WHERE Id = @Id";
+        string sqlStatement = "UPDATE card SET Name = @Name, Type = @Type, Element = @Element, Damage = @Damage WHERE Id = @Id";
         int rowsAffected = 0;
 
         try

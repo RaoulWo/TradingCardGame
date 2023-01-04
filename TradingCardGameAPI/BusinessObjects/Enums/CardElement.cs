@@ -4,6 +4,5 @@ public enum CardElement
 {
     Normal,
     Fire,
-    Water,
-    Electric
+    Water
 }

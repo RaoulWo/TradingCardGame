@@ -10,8 +10,6 @@ public class CardEntity : Entity, IAggregateRoot
     public CardType Type { get; set; }
     public CardElement Element { get; set; }
     public int Damage { get; set; }
-    public int Health { get; set; }
-    public int Cost { get; set; }
 
     protected override void Validate()
     {
