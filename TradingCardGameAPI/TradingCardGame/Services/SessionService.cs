@@ -1,7 +1,9 @@
-﻿using BusinessObjects.Entities;
+﻿using BusinessLogic.Utils;
+using BusinessObjects.Entities;
 using BusinessObjects.Interfaces.Facades;
 using BusinessObjects.Interfaces.Services;
 using DataAccess.Facades;
+using System.Net;
 
 namespace BusinessLogic.Services;
 
@@ -24,6 +26,42 @@ public class SessionService : ISessionService
     public SessionService(ISessionFacade sessionFacade)
     {
         _sessionFacade = sessionFacade;
+    }
+
+    public void CheckSession(HttpListenerContext ctx)
+    {
+        // Get the session cookie
+        var req = ctx.Request;
+        var sessionCookie = req.Cookies[0];
+
+        // Store the session id 
+        var sessionId = new Guid(sessionCookie.Value);
+
+        // Check if session exists
+        var sessionExists = CheckSessionById(sessionId);
+
+        // Send unauthorized response if session does not exist
+        if (!sessionExists)
+        {
+            Response.Instance.Unauthorized(ctx.Response);
+        }
+    }
+
+    public Guid GetPlayerId(HttpListenerContext ctx)
+    {
+        return GetFkPlayerIdById(GetSessionId(ctx));
+    }
+
+    public Guid GetSessionId(HttpListenerContext ctx)
+    {
+        // Get the session cookie
+        var req = ctx.Request;
+        var sessionCookie = req.Cookies[0];
+
+        // Store the session id 
+        var sessionId = new Guid(sessionCookie.Value);
+
+        return sessionId;
     }
 
     public void CreateSession(SessionEntity session)
