@@ -41,6 +41,10 @@ public class PlayerRepository : Repository<PlayerEntity>
                 player.Name = reader["Name"].ToString();
                 player.Password = reader["Password"].ToString();
                 player.Coins = Convert.ToInt32(reader["Coins"].ToString());
+                player.Wins = Convert.ToInt32(reader["Wins"].ToString());
+                player.Losses = Convert.ToInt32(reader["Losses"].ToString());
+                player.Draws = Convert.ToInt32(reader["Draws"].ToString());
+                player.Elo = Convert.ToInt32(reader["Elo"].ToString());
 
                 players.Add(player);
             }
@@ -66,6 +70,10 @@ public class PlayerRepository : Repository<PlayerEntity>
                 player.Name = reader["Name"].ToString();
                 player.Password = reader["Password"].ToString();
                 player.Coins = Convert.ToInt32(reader["Coins"].ToString());
+                player.Wins = Convert.ToInt32(reader["Wins"].ToString());
+                player.Losses = Convert.ToInt32(reader["Losses"].ToString());
+                player.Draws = Convert.ToInt32(reader["Draws"].ToString());
+                player.Elo = Convert.ToInt32(reader["Elo"].ToString());
             }
         }
 
@@ -93,6 +101,10 @@ public class PlayerRepository : Repository<PlayerEntity>
         cmd.Parameters.AddWithValue("@Name", entity.Name);
         cmd.Parameters.AddWithValue("@Password", entity.Password);
         cmd.Parameters.AddWithValue("@Coins", 20);
+        cmd.Parameters.AddWithValue("@Wins", 0);
+        cmd.Parameters.AddWithValue("@Losses", 0);
+        cmd.Parameters.AddWithValue("@Draws", 0);
+        cmd.Parameters.AddWithValue("@Elo", 100);
     }
 
     /// <summary>
@@ -106,6 +118,10 @@ public class PlayerRepository : Repository<PlayerEntity>
         cmd.Parameters.AddWithValue("@Name", entity.Name);
         cmd.Parameters.AddWithValue("@Password", entity.Password);
         cmd.Parameters.AddWithValue("@Coins", entity.Coins);
+        cmd.Parameters.AddWithValue("@Wins", entity.Wins);
+        cmd.Parameters.AddWithValue("@Losses", entity.Losses);
+        cmd.Parameters.AddWithValue("@Draws", entity.Draws);
+        cmd.Parameters.AddWithValue("@Elo", entity.Elo);
     }
 
     /// <summary>

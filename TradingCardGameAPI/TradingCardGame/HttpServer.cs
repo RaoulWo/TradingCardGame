@@ -26,6 +26,9 @@ public class HttpServer
         _dictionary.Add(new RequestMap("GET", "collection"), CollectionController.Instance.ShowCollection);
         _dictionary.Add(new RequestMap("GET", "deck"), CollectionController.Instance.ShowDeck);
         _dictionary.Add(new RequestMap("POST", "deck"), CollectionController.Instance.ConfigureDeck);
+        _dictionary.Add(new RequestMap("GET", "profile"), ProfileController.Instance.ShowProfile);
+        _dictionary.Add(new RequestMap("PUT", "profile"), ProfileController.Instance.ConfigureProfile);
+        _dictionary.Add(new RequestMap("GET", "score"), ScoreController.Instance.ShowLeaderBoard);
 
         _listener = new HttpListener();
         _listener.Prefixes.Add("http://localhost:" + Port.ToString() + "/");

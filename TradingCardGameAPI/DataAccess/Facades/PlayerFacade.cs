@@ -65,7 +65,7 @@ public class PlayerFacade : IPlayerFacade
 
     public int Insert(PlayerEntity player)
     {
-        string sqlStatement = "INSERT INTO player (Id, Name, Password, Coins) VALUES (@Id, @Name, @Password, @Coins)";
+        string sqlStatement = "INSERT INTO player (Id, Name, Password, Coins, Wins, Losses, Draws, Elo) VALUES (@Id, @Name, @Password, @Coins, @Wins, @Losses, @Draws, @Elo)";
         int rowsAffected = 0;
 
         try
@@ -84,7 +84,7 @@ public class PlayerFacade : IPlayerFacade
 
     public int Update(PlayerEntity player)
     {
-        string sqlStatement = "UPDATE player SET Name = @Name, Password = @Password, Coins = @Coins WHERE Id = @Id";
+        string sqlStatement = "UPDATE player SET Name = @Name, Password = @Password, Coins = @Coins, Wins = @Wins, Losses = @Losses, Draws = @Draws, Elo = @Elo WHERE Id = @Id";
         int rowsAffected = 0;
 
         try

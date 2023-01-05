@@ -25,9 +25,34 @@ public class PlayerService : IPlayerService
         _playerFacade = playerFacade;
     }
 
+    public IEnumerable<PlayerEntity> GetPlayerEntities()
+    {
+        return _playerFacade.GetAll();
+    }
+
     public PlayerEntity GetPlayerEntityByGuid(Guid guid)
     {
         return _playerFacade.GetByGuid(guid);
+    }
+
+    public bool CheckIfUsernameIsAvailable(string username)
+    {
+        var players = GetPlayerEntities();
+
+        foreach (var player in players)
+        {
+            if (player.Name == username)
+            {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    public void UpdatePlayerEntity(PlayerEntity player)
+    {
+        _playerFacade.Update(player);
     }
 
     public void ReducePlayerCoinsBy5(PlayerEntity player)
