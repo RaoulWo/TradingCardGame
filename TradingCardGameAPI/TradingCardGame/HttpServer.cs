@@ -29,6 +29,7 @@ public class HttpServer
         _dictionary.Add(new RequestMap("GET", "profile"), ProfileController.Instance.ShowProfile);
         _dictionary.Add(new RequestMap("PUT", "profile"), ProfileController.Instance.ConfigureProfile);
         _dictionary.Add(new RequestMap("GET", "score"), ScoreController.Instance.ShowLeaderBoard);
+        _dictionary.Add(new RequestMap("GET", "play"), GameController.Instance.Play);
 
         _listener = new HttpListener();
         _listener.Prefixes.Add("http://localhost:" + Port.ToString() + "/");

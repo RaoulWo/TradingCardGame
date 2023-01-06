@@ -9,10 +9,10 @@
   <ItemGroup>
     <Folder Include="Base\" />
     <Folder Include="Interfaces\Facades\" />
-    <Folder Include="Interfaces\Controllers\" />
     <Folder Include="Entities\" />
     <Folder Include="Enums\" />
     <Folder Include="Interfaces\Services\" />
+    <Folder Include="Game\" />
   </ItemGroup>
 
   <ItemGroup>
