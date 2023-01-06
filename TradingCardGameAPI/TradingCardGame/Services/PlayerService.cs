@@ -59,6 +59,11 @@ public class PlayerService : IPlayerService
     {
         player.Coins -= 5;
 
+        if (player.Coins < 0)
+        {
+            player.Coins = 0;
+        }
+
         _playerFacade.Update(player);
     }
 }
